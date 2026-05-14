@@ -1,0 +1,40 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+}
+
+type BettingPool @table {
+  creator: User!
+  name: String!
+  description: String!
+  eventDate: Date!
+  status: String!
+  createdAt: Timestamp!
+  imageUrl: String
+}
+
+type PoolParticipant @table(key: ["user", "bettingPool"]) {
+  user: User!
+  bettingPool: BettingPool!
+  role: String!
+  balance: Float!
+  createdAt: Timestamp!
+}
+
+type Outcome @table {
+  bettingPool: BettingPool!
+  description: String!
+  isWinningOutcome: Boolean!
+  createdAt: Timestamp!
+}
+
+type Bet @table {
+  participantUser: User!
+  participantPool: BettingPool!
+  outcome: Outcome!
+  amount: Float!
+  placedAt: Timestamp!
+  status: String!
+}

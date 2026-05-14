@@ -1,0 +1,3 @@
+# _redirects — Cloudflare Pages / Netlify SPA routing
+# Redirige todas las rutas al index.html para que React Router funcione
+/*  /index.html  200
