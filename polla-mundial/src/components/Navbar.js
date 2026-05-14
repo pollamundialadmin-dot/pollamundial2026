@@ -3,15 +3,27 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import StyledSwal from "../utils/swalConfig";
 
 export default function Navbar() {
   const { profile, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
-    toast.success("Sesión cerrada");
-    navigate("/login");
+    const result = await StyledSwal.fire({
+      title: "¿CERRAR SESIÓN?",
+      text: "¿Estás seguro que deseas salir de la aplicación?",
+      icon: "question",
+      confirmButtonText: "Sí, salir",
+      cancelButtonText: "Cancelar",
+      showCancelButton: true,
+    });
+
+    if (result.isConfirmed) {
+      await logout();
+      toast.success("Sesión cerrada");
+      navigate("/login");
+    }
   };
 
   return (
@@ -37,8 +49,8 @@ export default function Navbar() {
           </>
         )}
 
-        <div style={{ display:"flex", alignItems:"center", gap:8, marginLeft:"auto" }}>
-          <span style={{ fontSize:12, color:"var(--text-secondary)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+          <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
             {profile?.displayName || "Usuario"}
           </span>
           {isAdmin && <span className="nav-badge">ADMIN</span>}

@@ -344,3 +344,85 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── SweetAlert2 Custom Styling ─────────────────────────────────────────── */
+.swal2-popup.styled-swal-popup {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  padding: 2rem;
+}
+
+.swal2-title.styled-swal-title {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  letter-spacing: 1px;
+  font-size: 1.8rem;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.swal2-html-container.styled-swal-content {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.swal2-actions {
+  gap: 12px;
+  margin-top: 2rem;
+}
+
+.swal2-confirm.styled-swal-confirm,
+.swal2-cancel.styled-swal-cancel {
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  padding: 10px 24px !important;
+  font-size: 14px !important;
+  border: none !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.swal2-confirm.styled-swal-confirm {
+  background-color: var(--green) !important;
+  color: #000 !important;
+}
+
+.swal2-confirm.styled-swal-confirm:focus {
+  box-shadow: 0 0 0 3px var(--green-dim) !important;
+}
+
+.swal2-cancel.styled-swal-cancel {
+  background-color: var(--bg-card-2) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.swal2-cancel.styled-swal-cancel:focus {
+  box-shadow: 0 0 0 3px var(--border-dim) !important;
+}
+
+.swal2-icon {
+  border-color: var(--border) !important;
+}
+
+.swal2-icon.swal2-question {
+  border-color: var(--blue) !important;
+  color: var(--blue) !important;
+}
+
+.swal2-icon.swal2-success {
+  border-color: var(--green) !important;
+  color: var(--green) !important;
+}
+
+.swal2-icon.swal2-success [class^=swal2-success-line] {
+  background-color: var(--green) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: var(--green-dim) !important;
+}
