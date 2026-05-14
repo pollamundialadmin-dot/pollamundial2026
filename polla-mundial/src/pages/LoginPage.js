@@ -37,7 +37,7 @@ export default function LoginPage() {
             fontFamily:"var(--font-display)", fontSize:"3.5rem",
             letterSpacing:4, color:"var(--green)", lineHeight:1,
           }}>
-            POLLA
+            GOLAZO
           </h1>
           <p style={{
             fontFamily:"var(--font-display)", fontSize:"1.4rem",

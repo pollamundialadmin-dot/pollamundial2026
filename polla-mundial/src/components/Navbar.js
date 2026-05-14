@@ -30,7 +30,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <NavLink to="/" className="navbar-brand">
-          POLLA<span>MUNDIAL</span>
+          GOLAZO<span>MUNDIAL</span>
         </NavLink>
 
         {isAdmin ? (

@@ -2,7 +2,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // INSTRUCCIONES DE CONFIGURACIÓN:
 // 1. Ve a https://console.firebase.google.com/
-// 2. Crea un proyecto nuevo → "polla-mundial-2026"
+// 2. Crea un proyecto nuevo → "golazo-mundial-2026"
 // 3. Ve a Configuración del proyecto → Aplicaciones web → Agregar app
 // 4. Copia las credenciales y reemplaza los valores de REACT_APP_* en .env
 // 5. En Firebase Console: activa Firestore, Authentication (email/password)

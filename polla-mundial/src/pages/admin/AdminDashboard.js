@@ -30,7 +30,7 @@ export default function AdminDashboard() {
       <Navbar />
       <div className="page">
         <h1 className="section-title">Panel administrador</h1>
-        <p className="section-subtitle">Resumen general de la polla</p>
+        <p className="section-subtitle">Resumen general del torneo</p>
 
         {loading ? (
           <div className="loading-center"><div className="spinner" /></div>

@@ -1,6 +1,6 @@
-# 🏆 Polla Mundial 2026
+# 🏆 Golazo Mundial 2026
 
-Aplicación web completa para organizar una polla futbolera del Mundial FIFA 2026.
+Aplicación web completa para organizar un torneo de pronósticos futbolero del Mundial FIFA 2026.
 
 ---
 

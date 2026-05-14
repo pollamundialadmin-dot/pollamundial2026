@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Cloud Functions para Polla Mundial 2026",
+  "description": "Cloud Functions para Golazo Mundial 2026",
   "scripts": {
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
