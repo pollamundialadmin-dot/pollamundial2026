@@ -85,11 +85,10 @@ export default function LeaderboardPage() {
                   <th></th>
                   <th>Participante</th>
                   <th>Puntos</th>
-                  <th style={{ display:"none" }} className="hide-mobile">Ganadores</th>
+                  <th className="hide-mobile">Ganadores</th>
                   <th>Exactos</th>
                   <th>Córners</th>
                   <th>Tarjetas</th>
-                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
