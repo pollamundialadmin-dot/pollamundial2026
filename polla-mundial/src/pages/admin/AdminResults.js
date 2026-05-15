@@ -116,7 +116,7 @@ export default function AdminResults() {
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: 8, padding: "22px" }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {["pending", "all", "today"].map(f => (
               <button
                 key={f}
@@ -193,11 +193,10 @@ function ResultRow({ match, existing, onSave, isSaving }) {
         : "3px solid var(--text-muted)"
     }}>
       <div style={{ marginBottom: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-          <img src={match.homeTeam.crest} alt={match.homeTeam.name} className="team-crest" style={{ marginRight: '50px' }} />{match.homeTeam?.shortName || match.homeTeam?.name}
+        <div style={{ fontWeight: 600 }}>
+          {match.homeTeam?.shortName || match.homeTeam?.name}
           <span style={{ margin: "0 8px", color: "var(--text-muted)" }}>vs</span>
           {match.awayTeam?.shortName || match.awayTeam?.name}
-          <img src={match.awayTeam.crest} alt={match.awayTeam.name} className="team-crest" style={{ marginLeft: '50px' }} />
         </div>
 
         <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
