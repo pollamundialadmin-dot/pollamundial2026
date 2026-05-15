@@ -2,19 +2,35 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
-import { getPotConfig, savePotConfig } from "../../utils/firestoreService";
+import { getPotConfig, savePotConfig, getUsers } from "../../utils/firestoreService";
 import { calculatePrizes } from "../../utils/points";
+import { onlyNumbers } from "../../functions";
 
 export default function AdminConfig() {
-  const [config,  setConfig]  = useState({ totalPot:0, commission:15, splits:[50,30,20], currency:"COP" });
+
+  const [config,  setConfig]  = useState({ totalPot:0, commission:15, splits:[50,30,20], currency:"COP", entryPrice:0 });
   const [saving,  setSaving]  = useState(false);
   const [loading, setLoading] = useState(true);
+  const [paidUsersCount, setPaidCount] = useState(0);
 
   useEffect(() => {
-    getPotConfig().then(c => { setConfig(c); setLoading(false); });
+    const loadData = async () => {
+      setLoading(true);
+      const [configData, users] = await Promise.all([
+        getPotConfig(),
+        getUsers()
+      ]);
+      
+      setConfig(configData);
+      setPaidCount(users.filter(u => u.paid && u.role !== "admin").length);
+      setLoading(false);
+    };
+
+    loadData();
   }, []);
 
-  const prizes  = calculatePrizes(config.totalPot, config.commission, config.splits);
+  const totalPotCalculated = 34 * (config.entryPrice || 0);
+  const prizes  = calculatePrizes(totalPotCalculated, config.commission, config.splits);
   const fmtCOP  = (n) => "$" + Math.round(n).toLocaleString("es-CO");
   const splitSum = config.splits.reduce((a,b) => a+b, 0);
 
@@ -28,7 +44,7 @@ export default function AdminConfig() {
     if (splitSum !== 100) { toast.error("Los porcentajes de premio deben sumar exactamente 100%"); return; }
     setSaving(true);
     try {
-      await savePotConfig(config);
+      await savePotConfig({ ...config, totalPot: totalPotCalculated });
       toast.success("Configuración guardada ✓");
     } catch { toast.error("Error al guardar"); }
     finally { setSaving(false); }
@@ -49,21 +65,30 @@ export default function AdminConfig() {
               <h2 style={{ fontFamily:"var(--font-display)", fontSize:"1.2rem", letterSpacing:1, marginBottom:16 }}>BOTE Y COMISIÓN</h2>
 
               <div className="form-group">
-                <label className="form-label">Bote total recaudado (COP)</label>
-                <input type="number" className="form-input"
-                  value={config.totalPot}
-                  onChange={e => setConfig({...config, totalPot: Number(e.target.value)})}
-                  placeholder="ej. 900000" />
+                <label className="form-label">Valor de la entrada por usuario (COP)</label>
+                <input type="text" className="form-input"
+                  value={fmtCOP(config.entryPrice || 0)}
+                  onChange={e => setConfig({...config, entryPrice: onlyNumbers(e.target.value)})}
+                  placeholder="ej. 50000" />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Bote total recaudado (Calculado)</label>
+                <input type="text" className="form-input"
+                  value={fmtCOP(totalPotCalculated)}
+                  disabled
+                  style={{ background: "var(--bg-card-2)", cursor: "not-allowed" }}
+                  />
                 <p style={{ fontSize:12, color:"var(--text-muted)", marginTop:4 }}>
-                  Ingresa el total acumulado de todos los cupos pagados.
+                  Se calcula automáticamente: {paidUsersCount} usuarios pagos x {fmtCOP(config.entryPrice || 0)}
                 </p>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Comisión organizadores (%)</label>
-                <input type="number" className="form-input" min={0} max={50}
+                <input type="text" className="form-input" maxLength={2}
                   value={config.commission}
-                  onChange={e => setConfig({...config, commission: Number(e.target.value)})} />
+                  onChange={e => setConfig({...config, commission: onlyNumbers(e.target.value)})} />
               </div>
             </div>
 
@@ -110,11 +135,12 @@ export default function AdminConfig() {
             {/* Resumen */}
             <div className="card mb-6">
               <h2 style={{ fontFamily:"var(--font-display)", fontSize:"1.2rem", letterSpacing:1, marginBottom:16 }}>RESUMEN</h2>
-              <div className="grid-3">
+              <div className="grid-4">
                 {[
-                  { label:"Bote total",     val: fmtCOP(config.totalPot),       color:"var(--text-primary)" },
-                  { label:"Comisión org.",  val: fmtCOP(prizes.commissionAmt),  color:"var(--blue)" },
-                  { label:"Bote premios",   val: fmtCOP(prizes.prizePot),       color:"var(--green)" },
+                  { label:"Participantes Pagos", val: paidUsersCount,                    color:"var(--gold)" },
+                  { label:"Bote total",          val: fmtCOP(totalPotCalculated),    color:"var(--text-primary)" },
+                  { label:"Comisión org.",       val: fmtCOP(prizes.commissionAmt),  color:"var(--blue)" },
+                  { label:"Bote premios",        val: fmtCOP(prizes.prizePot),       color:"var(--green)" },
                 ].map(item => (
                   <div key={item.label} className="card card-sm" style={{ textAlign:"center" }}>
                     <div style={{ fontSize:11, color:"var(--text-muted)", marginBottom:4 }}>{item.label}</div>
