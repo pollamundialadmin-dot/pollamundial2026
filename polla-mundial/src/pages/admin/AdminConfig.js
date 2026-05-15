@@ -29,7 +29,7 @@ export default function AdminConfig() {
     loadData();
   }, []);
 
-  const totalPotCalculated = 34 * (config.entryPrice || 0);
+  const totalPotCalculated = paidUsersCount * (config.entryPrice || 0);
   const prizes  = calculatePrizes(totalPotCalculated, config.commission, config.splits);
   const fmtCOP  = (n) => "$" + Math.round(n).toLocaleString("es-CO");
   const splitSum = config.splits.reduce((a,b) => a+b, 0);
