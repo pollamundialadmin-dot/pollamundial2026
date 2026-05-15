@@ -18,6 +18,7 @@ export default function AdminUsers() {
   const [form,    setForm]    = useState(EMPTY_FORM);
   const [saving,  setSaving]  = useState(false);
 
+
   const load = async () => {
     setLoading(true);
     setUsers(await getUsers());
@@ -115,8 +116,8 @@ export default function AdminUsers() {
                       </span>
                     </td>
                     <td>
-                      <span className={u.paid ? "badge badge-green" : "badge badge-red"}>
-                        {u.paid ? "✓ Pagó" : "✗ Pendiente"}
+                      <span className={u.role === "admin" ? "badge badge-gray" : u.paid ? "badge badge-green" : "badge badge-red"}>
+                        {u.role === "admin" ? "N/A" : u.paid ? "✓ Pagó" : "✗ Pendiente"}
                       </span>
                     </td>
                     <td>
