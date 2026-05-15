@@ -35,6 +35,12 @@ export default function LeaderboardPage() {
 
   const fmtCOP = (n) => "$" + Math.round(n).toLocaleString("es-CO");
 
+  const posStatus = (pos) => {
+    if (pos.prevPosition > pos.position) return <span style={{color: "green", fontSize: "1rem"}}>↑</span>;
+    if (pos.prevPosition < pos.position) return <span style={{color: "red", fontSize: "1rem"}}>↓</span>;
+    return <span style={{color: "yellow", fontSize: "1.5rem"}}>=</span>;
+  }
+
   return (
     <>
       <Navbar />
@@ -76,12 +82,14 @@ export default function LeaderboardPage() {
               <thead>
                 <tr>
                   <th>#</th>
+                  <th></th>
                   <th>Participante</th>
                   <th>Puntos</th>
                   <th style={{ display:"none" }} className="hide-mobile">Ganadores</th>
                   <th>Exactos</th>
                   <th>Córners</th>
                   <th>Tarjetas</th>
+                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,6 +102,9 @@ export default function LeaderboardPage() {
                       <span className={posBadgeClass(entry.position)}>
                         {entry.position}
                       </span>
+                    </td>
+                    <td>
+                      <span>{posStatus(entry)}</span>
                     </td>
                     <td>
                       <span style={{ fontWeight: entry.uid === user?.uid ? 600 : 400 }}>
