@@ -98,6 +98,8 @@ export async function getResult(matchId) {
   return snap.exists() ? snap.data() : null;
 }
 
+import { translateCountry, translateStage, translateGroup } from "./translations";
+
 // ── PARTIDOS CACHE ────────────────────────────────────────────────────────────
 // Guardamos los partidos en Firestore para no depender 100% de la API externa
 
@@ -110,7 +112,20 @@ export async function cacheMatches(matches) {
 
 export async function getCachedMatches() {
   const snap = await getDocs(collection(db, "matches"));
-  return snap.docs.map((d) => ({ ...d.data() }));
+  return snap.docs.map((d) => {
+    const data = d.data();
+    if (data.homeTeam) {
+      data.homeTeam.name = translateCountry(data.homeTeam.name);
+      data.homeTeam.shortName = translateCountry(data.homeTeam.shortName);
+    }
+    if (data.awayTeam) {
+      data.awayTeam.name = translateCountry(data.awayTeam.name);
+      data.awayTeam.shortName = translateCountry(data.awayTeam.shortName);
+    }
+    if (data.stage) data.stage = translateStage(data.stage);
+    if (data.group) data.group = translateGroup(data.group);
+    return data;
+  });
 }
 
 // ── CONFIGURACIÓN DEL BOTE ───────────────────────────────────────────────────
@@ -142,4 +157,29 @@ export function subscribeToUserPredictions(userId, callback) {
   return onSnapshot(q, (snap) => {
     callback(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
   });
+}
+
+// ── BLOQUEO DE APUESTAS ───────────────────────────────────────────────────────
+
+/**
+ * Bloquea o desbloquea las apuestas de un partido.
+ * locked: true  → usuarios no pueden ingresar/editar pronósticos
+ * locked: false → apuestas abiertas
+ */
+export async function setMatchLocked(matchId, locked) {
+  await setDoc(
+    doc(db, "matches", String(matchId)),
+    { locked, lockedAt: serverTimestamp() },
+    { merge: true }
+  );
+}
+
+/**
+ * Bloquea o desbloquea TODOS los partidos de una lista a la vez.
+ */
+export async function setAllMatchesLocked(matchIds, locked) {
+  const promises = matchIds.map((id) =>
+    setDoc(doc(db, "matches", String(id)), { locked }, { merge: true })
+  );
+  await Promise.all(promises);
 }

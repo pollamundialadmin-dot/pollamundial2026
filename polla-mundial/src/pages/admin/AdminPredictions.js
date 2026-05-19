@@ -8,6 +8,7 @@ export default function AdminPredictions() {
   const [data,    setData]    = useState([]);
   const [matches, setMatches] = useState({});
   const [filter,  setFilter]  = useState("all"); // matchId
+  const [userSearch, setUserSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,7 +43,17 @@ export default function AdminPredictions() {
   }, []);
 
   const matchOptions = [...new Set(data.map(d => String(d.matchId)))];
-  const filtered = filter === "all" ? data : data.filter(d => String(d.matchId) === filter);
+  
+  let filtered = filter === "all" ? data : data.filter(d => String(d.matchId) === filter);
+
+  if (userSearch.trim() !== "") {
+    const q = userSearch.toLowerCase();
+    filtered = filtered.filter(row => {
+      const name = (row.user?.displayName || "").toLowerCase();
+      const email = (row.user?.email || "").toLowerCase();
+      return name.includes(q) || email.includes(q);
+    });
+  }
 
   // Agrupar por partido si "all"
   const grouped = {};
@@ -61,18 +72,22 @@ export default function AdminPredictions() {
             <h1 className="section-title">Pronósticos</h1>
             <p className="section-subtitle">{data.length} pronósticos en total</p>
           </div>
-          <select className="form-input" style={{ width:"auto" }} value={filter}
-            onChange={e => setFilter(e.target.value)}>
-            <option value="all">Todos los partidos</option>
-            {matchOptions.map(id => {
-              const m = matches[id];
-              return (
-                <option key={id} value={id}>
-                  {m ? `${m.homeTeam?.shortName} vs ${m.awayTeam?.shortName}` : `Partido ${id}`}
-                </option>
-              );
-            })}
-          </select>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <input type="text" className="form-input" placeholder="Buscar participante..."
+              value={userSearch} onChange={e => setUserSearch(e.target.value)} />
+            <select className="form-input" style={{ width:"auto" }} value={filter}
+              onChange={e => setFilter(e.target.value)}>
+              <option value="all">Todos los partidos</option>
+              {matchOptions.map(id => {
+                const m = matches[id];
+                return (
+                  <option key={id} value={id}>
+                    {m ? `${m.homeTeam?.shortName} vs ${m.awayTeam?.shortName}` : `Partido ${id}`}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
 
         {loading ? (

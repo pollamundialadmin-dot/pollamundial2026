@@ -1,4 +1,4 @@
-// src/utils/footballApi.js
+import { translateCountry, translateStage, translateGroup } from "./translations";
 
 // ─────────────────────────────────────────────
 // SOLO WORKER (PRODUCCIÓN)
@@ -84,20 +84,20 @@ function formatMatch(m) {
     utcDate: m.utcDate,
     status: m.status,
     matchday: m.matchday,
-    stage: m.stage,
-    group: m.group,
+    stage: translateStage(m.stage),
+    group: translateGroup(m.group),
 
     homeTeam: {
       id: m.homeTeam?.id,
-      name: m.homeTeam?.name,
-      shortName: m.homeTeam?.shortName || m.homeTeam?.name,
+      name: translateCountry(m.homeTeam?.name),
+      shortName: translateCountry(m.homeTeam?.shortName || m.homeTeam?.name),
       crest: m.homeTeam?.crest || null,
     },
 
     awayTeam: {
       id: m.awayTeam?.id,
-      name: m.awayTeam?.name,
-      shortName: m.awayTeam?.shortName || m.awayTeam?.name,
+      name: translateCountry(m.awayTeam?.name),
+      shortName: translateCountry(m.awayTeam?.shortName || m.awayTeam?.name),
       crest: m.awayTeam?.crest || null,
     },
 

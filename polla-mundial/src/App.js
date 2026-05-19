@@ -25,6 +25,13 @@ function PrivateRoute({ children }) {
   return user ? children : <Navigate to="/login" replace />;
 }
 
+function UserRoute({ children }) {
+  const { user, isAdmin } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (isAdmin) return <Navigate to="/admin" replace />;
+  return children;
+}
+
 function AdminRoute({ children }) {
   const { user, isAdmin } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
@@ -39,10 +46,10 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
 
       {/* Usuario */}
-      <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-      <Route path="/predictions" element={<PrivateRoute><PredictionsPage /></PrivateRoute>} />
+      <Route path="/" element={<UserRoute><DashboardPage /></UserRoute>} />
+      <Route path="/predictions" element={<UserRoute><PredictionsPage /></UserRoute>} />
       <Route path="/leaderboard" element={<PrivateRoute><LeaderboardPage /></PrivateRoute>} />
-      <Route path="/history" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
+      <Route path="/history" element={<UserRoute><HistoryPage /></UserRoute>} />
 
       {/* Admin */}
       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

@@ -114,7 +114,7 @@ function MiniPredCard({ match, prediction, onSaved, userId }) {
   const [cards,     setCards]     = useState(prediction?.cards     ?? "");
   const [saving, setSaving]       = useState(false);
 
-  const isLocked = match.status === "IN_PLAY" || match.status === "PAUSED" || match.status === "FINISHED";
+  const isLocked = match.locked || match.status === "IN_PLAY" || match.status === "PAUSED" || match.status === "FINISHED";
   const localTime = format(new Date(match.utcDate), "d MMM · HH:mm", { locale: es });
 
   const handleSave = async () => {
@@ -148,8 +148,12 @@ function MiniPredCard({ match, prediction, onSaved, userId }) {
 
         {/* Estado / predicción */}
         {isLocked ? (
-          <span className="badge badge-gray">
-            {match.status === "FINISHED" ? `${match.score.home}–${match.score.away} · FIN` : "En juego"}
+          <span className={match.locked && match.status !== "FINISHED" ? "badge badge-red" : "badge badge-gray"}>
+            {match.locked && match.status !== "FINISHED"
+              ? "🔒 Cerrado"
+              : match.status === "FINISHED"
+                ? `${match.score?.home ?? "?"}–${match.score?.away ?? "?"} · FIN`
+                : "En juego"}
           </span>
         ) : prediction && !editing ? (
           <div style={{ display:"flex", gap:8, alignItems:"center" }}>

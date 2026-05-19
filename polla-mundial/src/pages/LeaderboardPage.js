@@ -17,7 +17,8 @@ export default function LeaderboardPage() {
       const [users, preds, results, config] = await Promise.all([
         getUsers(), getAllPredictions(), getResults(), getPotConfig(),
       ]);
-      const lb = buildLeaderboard(users, preds, results);
+      const participants = users.filter(u => u.role !== "admin");
+      const lb = buildLeaderboard(participants, preds, results);
       setTable(lb);
       const p = calculatePrizes(config.totalPot, config.commission, config.splits);
       setPrizes({ ...p, config });

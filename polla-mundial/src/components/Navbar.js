@@ -29,7 +29,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <NavLink to="/" className="navbar-brand">
+        <NavLink to={isAdmin ? "/admin" : "/"} className="navbar-brand">
           GOLAZO<span>MUNDIAL</span>
         </NavLink>
 
