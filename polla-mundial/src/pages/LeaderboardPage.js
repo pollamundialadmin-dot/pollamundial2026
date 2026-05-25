@@ -1,7 +1,7 @@
 // src/pages/LeaderboardPage.js
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { getUsers, getAllPredictions, getResults, getPotConfig } from "../utils/firestoreService";
+import { getUsers, getAllPredictions, getResults, getPotConfig } from "../utils/supabaseService";
 import { buildLeaderboard, calculatePrizes } from "../utils/points";
 import { useAuth } from "../context/AuthContext";
 

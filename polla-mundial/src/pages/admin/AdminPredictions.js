@@ -1,7 +1,7 @@
 // src/pages/admin/AdminPredictions.js
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { getAllPredictions, getUsers, getResults, getCachedMatches } from "../../utils/firestoreService";
+import { getAllPredictions, getUsers, getResults, getCachedMatches } from "../../utils/supabaseService";
 import { calculatePoints } from "../../utils/points";
 
 export default function AdminPredictions() {

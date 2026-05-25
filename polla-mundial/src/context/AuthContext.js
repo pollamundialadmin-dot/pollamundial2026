@@ -1,45 +1,79 @@
-// src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { supabase } from "../supabase";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
-  const [profile, setProfile] = useState(null); // datos extra de Firestore
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        // Carga perfil con rol desde Firestore
-        const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (snap.exists()) setProfile(snap.data());
+    // Escuchar cambios de sesión
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        // Obtener perfil desde Supabase
+        const { data: prof } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        
+        if (prof) {
+          setProfile(prof);
+        }
       } else {
         setUser(null);
         setProfile(null);
       }
       setLoading(false);
     });
-    return unsub;
+
+    // Carga inicial
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) setLoading(false);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
-  const login = (email, password) =>
-    signInWithEmailAndPassword(auth, email, password);
+  const login = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  };
 
-  const logout = () => signOut(auth);
+  const register = async (email, password, displayName) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          displayName,
+          role: "user",
+          paid: false,
+          status: "pending_upload"
+        }
+      }
+    });
+    if (error) throw error;
+  };
+
+  const resetPassword = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) throw error;
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
 
   const isAdmin = profile?.role === "admin";
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, profile, loading, login, register, resetPassword, logout, isAdmin }}>
       {!loading && children}
     </AuthContext.Provider>
   );

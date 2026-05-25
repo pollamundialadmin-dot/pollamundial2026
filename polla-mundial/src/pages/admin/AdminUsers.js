@@ -4,9 +4,9 @@ import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
 import {
   getUsers, createUserProfile, updateUserProfile, deleteUserProfile,
-} from "../../utils/firestoreService";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+} from "../../utils/supabaseService";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth, secondaryAuth } from "../../firebase";
 
 const EMPTY_FORM = { displayName:"", email:"", password:"", role:"user", paid:false };
 
@@ -51,13 +51,19 @@ export default function AdminUsers() {
         if (!form.password || form.password.length < 6) {
           toast.error("La contraseña debe tener al menos 6 caracteres"); setSaving(false); return;
         }
-        const cred = await createUserWithEmailAndPassword(auth, form.email, form.password);
+        // Usamos secondaryAuth para no cerrar la sesión del admin
+        const cred = await createUserWithEmailAndPassword(secondaryAuth, form.email, form.password);
+        
         await createUserProfile(cred.user.uid, {
           displayName: form.displayName,
           email:       form.email,
           role:        form.role,
           paid:        form.paid,
         });
+
+        // Cerramos la sesión secundaria que Firebase abre automáticamente
+        await signOut(secondaryAuth);
+        
         toast.success("Usuario creado ✓");
       }
       setModal(false);

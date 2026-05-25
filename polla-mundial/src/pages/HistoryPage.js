@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import Navbar from "../components/Navbar";
-import { getUserPredictions, getResults, getCachedMatches } from "../utils/firestoreService";
+import { getUserPredictions, getResults, getCachedMatches } from "../utils/supabaseService";
 import { calculatePoints } from "../utils/points";
 import { useAuth } from "../context/AuthContext";
 

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
-import { getPotConfig, savePotConfig, getUsers } from "../../utils/firestoreService";
+import { getPotConfig, savePotConfig, getUsers } from "../../utils/supabaseService";
 import { calculatePrizes } from "../../utils/points";
 import { onlyNumbers } from "../../functions";
 

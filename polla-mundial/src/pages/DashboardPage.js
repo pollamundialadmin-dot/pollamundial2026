@@ -5,7 +5,7 @@ import { es } from "date-fns/locale";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import { getTodayMatches, getAllMatches } from "../utils/footballApi";
-import { savePrediction, getUserPredictions, cacheMatches, getCachedMatches } from "../utils/firestoreService";
+import { savePrediction, getUserPredictions, cacheMatches, getCachedMatches } from "../utils/supabaseService";
 import { useAuth } from "../context/AuthContext";
 
 // ── Formulario de pronóstico ──────────────────────────────────────────────────

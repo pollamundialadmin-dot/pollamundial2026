@@ -6,7 +6,7 @@ import { es } from "date-fns/locale";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import { getAllMatches } from "../utils/footballApi";
-import { getUserPredictions, savePrediction, cacheMatches } from "../utils/firestoreService";
+import { getUserPredictions, savePrediction, cacheMatches } from "../utils/supabaseService";
 import { useAuth } from "../context/AuthContext";
 
 export default function PredictionsPage() {

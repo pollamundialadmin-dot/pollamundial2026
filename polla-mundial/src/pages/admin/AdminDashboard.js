@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import { getUsers, getAllPredictions, getResults, getPotConfig } from "../../utils/firestoreService";
+import { getUsers, getAllPredictions, getResults, getPotConfig } from "../../utils/supabaseService";
 import { buildLeaderboard, calculatePrizes } from "../../utils/points";
 
 export default function AdminDashboard() {
@@ -14,7 +14,8 @@ export default function AdminDashboard() {
       const [users, preds, results, config] = await Promise.all([
         getUsers(), getAllPredictions(), getResults(), getPotConfig(),
       ]);
-      const lb = buildLeaderboard(users, preds, results);
+      const participants = users.filter(u => u.role !== "admin");
+      const lb = buildLeaderboard(participants, preds, results);
       const prizes = calculatePrizes(config.totalPot, config.commission, config.splits);
       setStats({ users, preds, results, config, lb, prizes });
       setLoading(false);
